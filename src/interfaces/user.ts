@@ -4,3 +4,8 @@ export type UserRole =
   | "Power User"
   | "User"
   | "Support Desk";
+
+export interface UserLoginPayload {
+  email: string;
+  password: string;
+}

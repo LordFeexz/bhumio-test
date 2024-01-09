@@ -1,3 +1,4 @@
+import { userRole } from "src/constant/user.constant";
 import type { UserRole } from "src/interfaces/user";
 import {
   Entity,
@@ -24,7 +25,7 @@ export class User extends BaseEntity {
 
   @Column({
     nullable: false,
-    enum: ["Super Admin", "Admin", "Power User", "User", "Support Desk"],
+    enum: userRole,
   })
   public role: UserRole;
 

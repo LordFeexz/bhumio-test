@@ -6,7 +6,7 @@ export class SeedSuperAdmin1704714952185 implements MigrationInterface {
     await queryRunner.query(
       `INSERT INTO "Users" (name, email, password, role) VALUES ('super admin', 'admin@gmail.com', '${encryption.hashData(
         "@Admin123"
-      )}', 'Super Admin')`
+      )}', 'Super Admin')` //can use env for safe
     );
   }
 
