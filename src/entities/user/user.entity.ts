@@ -1,5 +1,5 @@
-import { userRole } from "src/constant/user.constant";
-import type { UserRole } from "src/interfaces/user";
+import { userRole } from "../../constant/user.constant";
+import type { UserRole } from "../../interfaces/user";
 import {
   Entity,
   BaseEntity,

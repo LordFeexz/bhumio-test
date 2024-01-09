@@ -42,7 +42,7 @@ export default abstract class BaseValidation {
     for (const requirement of requirements)
       if (!requirement.regex.test(password)) errors.push(requirement.message);
 
-    if (errors.length) throw { errors };
+    if (errors.length) throw new BadRequestException(errors.join(","));
 
     return true;
   }

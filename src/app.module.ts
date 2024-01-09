@@ -22,7 +22,9 @@ import { JwtModule } from "@nestjs/jwt";
     AppService,
     {
       provide: APP_INTERCEPTOR,
-      useClass: MorganInterceptor("combined"),
+      useClass: MorganInterceptor("combined", {
+        skip: () => process.env.NODE_ENV === "test",
+      }),
     },
   ],
 })

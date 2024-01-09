@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import * as yup from "yup";
-import BaseValidation from "src/base/validation";
-import { UserLoginPayload } from "src/interfaces/user";
+import BaseValidation from "../../base/validation";
+import type { UserLoginPayload } from "../../interfaces/user";
 
 @Injectable()
 export class UserValidation extends BaseValidation {

@@ -8,7 +8,7 @@ const config: TypeOrmModuleOptions = {
   password: "qwertyui",
   database: "bhumio",
   synchronize: process.env.NODE_ENV !== "production",
-  logging: true,
+  logging: process.env.NODE_ENV !== "test",
   entities: [User],
   subscribers: [],
   migrations: [],

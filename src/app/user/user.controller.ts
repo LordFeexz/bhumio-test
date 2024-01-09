@@ -5,10 +5,10 @@ import {
   UnauthorizedException,
   Res,
 } from "@nestjs/common";
-import type { UserLoginPayload } from "src/interfaces/user";
+import type { UserLoginPayload } from "../../interfaces/user";
 import { UserService } from "./user.service";
 import { UserValidation } from "./user.validation";
-import encryption from "src/utils/encryption";
+import encryption from "../../utils/encryption";
 import type { Response } from "express";
 
 @Controller("user")
