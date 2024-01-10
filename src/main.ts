@@ -2,7 +2,7 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { baseUrl } from "./constant";
 import * as session from "express-session";
-import { initialize, session as passportSession } from "passport";
+import * as passport from "passport";
 import { ForbiddenException } from "@nestjs/common";
 import { config } from "dotenv";
 import helmet from "helmet";
@@ -12,13 +12,22 @@ config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix(baseUrl);
   app.use(
     session({
       secret: process.env.SESSION_SECRET,
       saveUninitialized: false,
       resave: false,
+      cookie: {
+        maxAge: 60000 * 60 * 24,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      },
     })
   );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.enableCors({
     origin(requestOrigin, callback) {
@@ -38,8 +47,6 @@ async function bootstrap() {
       referrerPolicy: { policy: "same-origin" },
     })
   );
-
-  app.setGlobalPrefix(baseUrl);
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

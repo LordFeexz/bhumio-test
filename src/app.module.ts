@@ -8,6 +8,7 @@ import { MorganModule, MorganInterceptor } from "nest-morgan";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { AuthModule } from "./app/auth/auth.module";
 import { JwtModule } from "@nestjs/jwt";
+import { AdminModule } from "./app/admin/admin.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { JwtModule } from "@nestjs/jwt";
     UserModule,
     MorganModule,
     AuthModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [

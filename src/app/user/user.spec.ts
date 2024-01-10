@@ -109,5 +109,24 @@ describe("User Module", () => {
       expect(status).toBe(200);
       expect(body).toHaveProperty("data", expect.any(String));
     });
+
+    it('should return unauthorized cause session still active',async() => {
+        await request(app.getHttpServer())
+        .post(url)
+        .send({
+          email: "user@gmail.com",
+          password: "@Users123",
+        });
+
+        const {body,status} = await request(app.getHttpServer())
+        .post(url)
+        .send({
+          email: "user@gmail.com",
+          password: "@Users123",
+        });
+
+        expect(status).toBe(401)
+        expect(body).toHaveProperty('message',expect.any(String))
+    })
   });
 });

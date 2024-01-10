@@ -9,3 +9,13 @@ export interface UserLoginPayload {
   email: string;
   password: string;
 }
+
+export interface UserAttributes {
+  id: string;
+  name: string;
+  email: string;
+  password?: string;
+  role: UserRole;
+  createdAt: Date;
+  updatedAt: Date;
+}
