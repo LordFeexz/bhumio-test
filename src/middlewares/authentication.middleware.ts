@@ -7,7 +7,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user/user.entity';
 import { UserRepository } from '../entities/user/user.repository';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthService } from '../app/auth/auth.service';
 
 @Injectable()
 export class Authentication implements NestMiddleware {

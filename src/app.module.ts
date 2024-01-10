@@ -9,6 +9,7 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
 import { AuthModule } from "./app/auth/auth.module";
 import { JwtModule } from "@nestjs/jwt";
 import { AdminModule } from "./app/admin/admin.module";
+import { GroupModule } from "./app/group/group.module";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AdminModule } from "./app/admin/admin.module";
     MorganModule,
     AuthModule,
     AdminModule,
+    GroupModule,
   ],
   controllers: [AppController],
   providers: [
