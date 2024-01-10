@@ -17,4 +17,8 @@ export class GroupService {
   public async createGroup(name: string) {
     return await this.groupRepo.create({ name }).save();
   }
+
+  public async getById(id: string) {
+    return await this.groupRepo.findOne({ where: { id } });
+  }
 }

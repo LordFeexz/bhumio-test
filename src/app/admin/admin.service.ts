@@ -26,4 +26,8 @@ export class AdminService {
   public async isExists(email: string) {
     return await this.userRepo.exists({ where: { email } });
   }
+
+  public async getOneById(id: string) {
+    return await this.userRepo.findOne({ where: { id } });
+  }
 }
