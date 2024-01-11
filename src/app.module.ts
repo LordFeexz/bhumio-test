@@ -14,6 +14,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailService } from './utils/email';
 import { UrlEncodedParser } from './middlewares/urlEncodedParser';
 import { config } from "dotenv";
+import { TransactionModule } from './app/transaction/transaction.module';
+import { UserGroupModule } from './app/userGroup/userGroup.module';
 
 config()
 
@@ -26,6 +28,8 @@ config()
     AuthModule,
     AdminModule,
     GroupModule,
+    TransactionModule,
+    UserGroupModule,
     MailerModule.forRoot({
       transport: {
         host: process.env.EMAIL_HOST,

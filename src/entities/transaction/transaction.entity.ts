@@ -1,35 +1,40 @@
 import {
+  TRANSACTION_STATUS,
+  TRANSACTION_TYPE,
+} from "../../constant/transaction.constant";
+import type {
+  TransactionStatus,
+  TransactionType,
+} from "../../interfaces/transaction";
+import {
   Entity,
-  BaseEntity,
   Column,
+  BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
-  JoinColumn,
-  OneToOne,
   ManyToOne,
+  JoinColumn,
 } from "typeorm";
 import { User } from "../user/user.entity";
-import { Group } from "../group/group.entity";
 
-@Entity({ name: "UserGroups" })
-export class UserGroup extends BaseEntity {
+@Entity({ name: "Transactions" })
+export class Transaction extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   public id: string;
 
-  @Column({ nullable: false })
-  public userId: string;
+  @Column({ nullable: false, enum: TRANSACTION_TYPE })
+  public type: TransactionType;
+
+  @Column({ enum: TRANSACTION_STATUS, default: "Process" })
+  public status: TransactionStatus;
 
   @Column({ nullable: false })
-  public groupId: string;
+  userId: string;
 
-  @OneToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: "userId" })
   user: User;
-
-  @ManyToOne(() => Group, (group) => group.id)
-  @JoinColumn({ name: "groupId" })
-  group: Group;
 
   @CreateDateColumn({
     name: "createdAt",

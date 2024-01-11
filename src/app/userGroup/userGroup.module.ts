@@ -6,5 +6,6 @@ import { UserGroupService } from "./userGroup.service";
 @Module({
   imports: [TypeOrmModule.forFeature([UserGroup])],
   providers: [UserGroupService],
+  exports: [UserGroupService],
 })
 export class UserGroupModule {}
