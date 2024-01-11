@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   JoinColumn,
   OneToOne,
+  ManyToOne,
 } from "typeorm";
 import { User } from "../user/user.entity";
 import { Group } from "../group/group.entity";
@@ -26,7 +27,7 @@ export class UserGroup extends BaseEntity {
   @JoinColumn({ name: "userId" })
   user: User;
 
-  @OneToOne(() => Group, (group) => group.id)
+  @ManyToOne(() => Group, (group) => group.id)
   @JoinColumn({ name: "groupId" })
   group: Group;
 

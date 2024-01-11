@@ -1,4 +1,10 @@
-import { Body, ConflictException, Controller, Post } from "@nestjs/common";
+import {
+  Body,
+  ConflictException,
+  Controller,
+  HttpCode,
+  Post,
+} from "@nestjs/common";
 import { GroupValidation } from "./group.validation";
 import { GroupService } from "./group.service";
 
@@ -10,6 +16,7 @@ export class GroupController {
   ) {}
 
   @Post()
+  @HttpCode(201)
   public async createGroup(@Body() payload: { name: string }) {
     const { name } = await this.groupValidation.validateCreateGroup(payload);
 

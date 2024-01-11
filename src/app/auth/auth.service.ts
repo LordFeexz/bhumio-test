@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import type { AuthPayload } from "src/interfaces/auth";
+import type { AuthPayload } from "../../interfaces/auth";
 import { JwtService } from "@nestjs/jwt";
 import type { jwtValue } from "../../interfaces";
 

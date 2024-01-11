@@ -4,6 +4,8 @@ import { User } from "../../entities/user/user.entity";
 import { Injectable } from "@nestjs/common";
 import type { CreateAdminInput } from "../../interfaces/admin";
 import encryption from "../../utils/encryption";
+import type { DbOpts } from "../../interfaces";
+import type { CreateUserInput } from "../../interfaces/user";
 
 @Injectable()
 export class AdminService {
@@ -12,7 +14,10 @@ export class AdminService {
     private readonly userRepo: UserRepository
   ) {}
 
-  public async createDefaultAdmin({ email, name }: CreateAdminInput) {
+  public async createDefaultAdmin(
+    { email, name }: CreateAdminInput,
+    opts?: DbOpts
+  ) {
     return await this.userRepo
       .create({
         name,
@@ -20,14 +25,18 @@ export class AdminService {
         password: encryption.hashData("Default@123"),
         role: "Admin",
       })
-      .save();
+      .save({ ...opts });
   }
 
-  public async isExists(email: string) {
-    return await this.userRepo.exists({ where: { email } });
+  public async isExists(email: string, opts?: DbOpts) {
+    return await this.userRepo.exists({ ...opts, where: { email } });
   }
 
-  public async getOneById(id: string) {
-    return await this.userRepo.findOne({ where: { id } });
+  public async getOneById(id: string, opts?: DbOpts) {
+    return await this.userRepo.findOne({ ...opts, where: { id } });
+  }
+
+  public async createOneUser(payload: CreateUserInput, opts?: DbOpts) {
+    return await this.userRepo.create({ ...payload }).save({ ...opts });
   }
 }

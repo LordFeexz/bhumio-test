@@ -15,6 +15,8 @@ const config: TypeOrmModuleOptions = {
   subscribers: [],
   migrations: [],
   type: "postgres",
+  connectTimeoutMS: 30000,
+  
 };
 
 export default config;

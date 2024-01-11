@@ -19,3 +19,9 @@ export interface UserAttributes {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CreateUserInput {
+  name: string;
+  email: string;
+  role: "Power User" | "User";
+}

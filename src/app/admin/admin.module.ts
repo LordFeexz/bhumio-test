@@ -18,6 +18,7 @@ import { Group } from '../../entities/group/group.entity';
 import { GroupService } from '../group/group.service';
 import { UserGroup } from '../../entities/userGroup/userGroup.entity';
 import { UserGroupService } from '../userGroup/userGroup.service';
+import { EmailService } from '../../utils/email';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Group, UserGroup])],
@@ -28,12 +29,14 @@ import { UserGroupService } from '../userGroup/userGroup.service';
     JwtService,
     GroupService,
     UserGroupService,
+    EmailService,
   ],
   controllers: [AdminController],
 })
 export class AdminModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     const superAdminOnly = AuthorizeRole(['Super Admin']);
+    const adminOnly = AuthorizeRole(['Admin']);
     consumer
       .apply(
         Authentication,
@@ -45,5 +48,14 @@ export class AdminModule implements NestModule {
         { path: '/admin', method: RequestMethod.POST },
         { path: '/admin/:adminId/:groupId', method: RequestMethod.PATCH },
       );
+
+    consumer
+      .apply(
+        Authentication,
+        (req: Request, res: Response, next: NextFunction) => {
+          adminOnly(req, res, next);
+        },
+      )
+      .forRoutes({ path: '/admin/user/:groupId', method: RequestMethod.POST });
   }
 }

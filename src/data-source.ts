@@ -14,7 +14,7 @@ export default new DataSource({
   synchronize: process.env.NODE_ENV !== "production",
   logging: true,
   entities: [User, Group, UserGroup],
-  subscribers: [],
   migrations: [SeedSuperAdmin1704714952185],
   type: "postgres",
+  connectTimeoutMS: 30000,
 });

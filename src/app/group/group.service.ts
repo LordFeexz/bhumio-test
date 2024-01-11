@@ -1,7 +1,7 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
 import { Group } from "../../entities/group/group.entity";
-import { GroupRepository } from "src/entities/group/group.repository";
+import { GroupRepository } from "../../entities/group/group.repository";
 
 @Injectable()
 export class GroupService {

@@ -1,4 +1,4 @@
-import encryption from "src/utils/encryption";
+import encryption from "../utils/encryption";
 import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class SeedSuperAdmin1704714952185 implements MigrationInterface {

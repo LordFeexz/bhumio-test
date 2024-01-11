@@ -1,4 +1,4 @@
-import type { UserAttributes } from "src/interfaces/user";
+import type { UserAttributes } from "../interfaces/user";
 
 declare global {
   namespace Express {
