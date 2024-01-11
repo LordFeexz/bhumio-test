@@ -1,8 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import * as yup from "yup";
-import BaseValidation from "../../base/validation";
-import { TRANSACTION_TYPE } from "../../constant/transaction.constant";
-import type { TransactionType } from "../../interfaces/transaction";
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
+import * as yup from 'yup';
+import BaseValidation from '../../base/validation';
+import { TRANSACTION_TYPE } from '../../constant/transaction.constant';
+import type {
+  TransactionStatus,
+  TransactionType,
+} from '../../interfaces/transaction';
 
 @Injectable()
 export class TransactionValidation extends BaseValidation {
@@ -11,10 +18,17 @@ export class TransactionValidation extends BaseValidation {
       yup.object().shape({
         type: yup
           .string()
-          .required("type is required")
-          .oneOf(TRANSACTION_TYPE, "invalid type"),
+          .required('type is required')
+          .oneOf(TRANSACTION_TYPE, 'invalid type'),
       }),
-      data
+      data,
     );
+  }
+
+  public async validateChangeStatus(status: TransactionStatus) {
+    if (status === 'Success')
+      throw new BadRequestException('transaction already success');
+    if (status === 'Cancel')
+      throw new ConflictException('transaction already canceled');
   }
 }

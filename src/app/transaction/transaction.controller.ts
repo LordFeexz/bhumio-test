@@ -6,6 +6,7 @@ import {
   HttpCode,
   NotFoundException,
   Param,
+  Patch,
   Post,
   Req,
 } from "@nestjs/common";
@@ -50,7 +51,22 @@ export class TransactionController {
     const { id } = req.userCtx;
     if (transaction.userId !== id) throw new ForbiddenException();
 
+    this.transactionValidation.validateChangeStatus(transaction.status);
+
     transaction.status = "Cancel";
+    await transaction.save();
+
+    return { message: "success" };
+  }
+
+  @Patch(":transactionId")
+  public async adminSetSuccess(
+    @Param("transactionId", ParseToTransaction) transaction: Transaction | null
+  ) {
+    if (!transaction) throw new NotFoundException("transaction not found");
+    this.transactionValidation.validateChangeStatus(transaction.status);
+
+    transaction.status = "Success";
     await transaction.save();
 
     return { message: "success" };
