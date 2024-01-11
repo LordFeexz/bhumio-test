@@ -49,7 +49,7 @@ export class TransactionController {
   @Get()
   public async getMyTransaction(
     @Req() req: Request,
-    @Query(PaginationQuery) { page, limit }: PaginationQueryProps,
+    @Query(PaginationQuery) { page, limit, sort }: PaginationQueryProps,
   ) {
     const { id } = req.userCtx;
 
@@ -57,6 +57,28 @@ export class TransactionController {
       id,
       (page - 1) * limit,
       limit,
+      sort,
+    );
+    if (total < 1) throw new NotFoundException('data not found');
+
+    return {
+      message: 'OK',
+      data,
+      total,
+      totalPage: Math.ceil(total / limit),
+      page,
+      limit,
+    };
+  }
+
+  @Get('/all')
+  public async findAll(
+    @Query(PaginationQuery) { page, limit, sort }: PaginationQueryProps,
+  ) {
+    const [data, total] = await this.transactionService.findAll(
+      (page - 1) * limit,
+      limit,
+      sort,
     );
     if (total < 1) throw new NotFoundException('data not found');
 

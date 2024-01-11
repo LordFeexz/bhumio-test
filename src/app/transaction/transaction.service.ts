@@ -4,6 +4,7 @@ import { Transaction } from "../../entities/transaction/transaction.entity";
 import { TransactionRepository } from "../../entities/transaction/transaction.repository";
 import type { TransactionType } from "../../interfaces/transaction";
 import type { DbOpts } from "../../interfaces";
+import type { SortOpts } from "../../pipes/parseQuery";
 
 @Injectable()
 export class TransactionService {
@@ -25,11 +26,27 @@ export class TransactionService {
     return await this.transactionRepo.findOneBy({ id });
   }
 
-  public async findByUserId(userId: string, skip = 0, limit = 10) {
+  public async findByUserId(
+    userId: string,
+    skip = 0,
+    limit = 10,
+    sort: SortOpts = "DESC"
+  ) {
     return await this.transactionRepo.findAndCount({
       where: { userId },
       skip,
       take: limit,
+      order: {
+        createdAt: sort,
+      },
+    });
+  }
+
+  public async findAll(skip = 0, limit = 10, sort: SortOpts = "DESC") {
+    return await this.transactionRepo.findAndCount({
+      skip,
+      take: limit,
+      order: { createdAt: sort },
     });
   }
 }

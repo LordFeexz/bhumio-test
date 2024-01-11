@@ -29,6 +29,7 @@ export class TransactionModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     const userOnly = AuthorizeRole(['User']);
     const adminOnly = AuthorizeRole(['Admin']);
+    const powerUserAndSupportOnly = AuthorizeRole(['Power User','Support Desk']);
 
     consumer
       .apply(Authentication)
@@ -43,6 +44,8 @@ export class TransactionModule implements NestModule {
       .forRoutes({
         path: '/transaction/:transactionId',
         method: RequestMethod.PATCH,
-      });
+      })
+      .apply(powerUserAndSupportOnly)
+      .forRoutes({ path: '/transaction/all', method: RequestMethod.GET });
   }
 }
