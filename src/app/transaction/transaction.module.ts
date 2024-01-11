@@ -29,15 +29,17 @@ export class TransactionModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     const userOnly = AuthorizeRole(['User']);
     const adminOnly = AuthorizeRole(['Admin']);
-    consumer
-      .apply(Authentication, userOnly)
-      .forRoutes(
-        { path: '/transaction', method: RequestMethod.POST },
-        { path: '/transaction/:transactionId', method: RequestMethod.DELETE },
-      );
 
     consumer
-      .apply(Authentication, adminOnly)
+      .apply(Authentication)
+      .forRoutes({ path: '/transaction', method: RequestMethod.ALL })
+      .apply(userOnly)
+      .forRoutes(
+        { path: '/transaction', method: RequestMethod.POST },
+        { path: '/transaction', method: RequestMethod.GET },
+        { path: '/transaction/:transactionId', method: RequestMethod.DELETE },
+      )
+      .apply(adminOnly)
       .forRoutes({
         path: '/transaction/:transactionId',
         method: RequestMethod.PATCH,

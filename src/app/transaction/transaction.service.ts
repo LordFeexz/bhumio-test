@@ -24,4 +24,12 @@ export class TransactionService {
   public async findById(id: string) {
     return await this.transactionRepo.findOneBy({ id });
   }
+
+  public async findByUserId(userId: string, skip = 0, limit = 10) {
+    return await this.transactionRepo.findAndCount({
+      where: { userId },
+      skip,
+      take: limit,
+    });
+  }
 }
