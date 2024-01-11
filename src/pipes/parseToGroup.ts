@@ -1,5 +1,5 @@
 import { Injectable, type PipeTransform } from '@nestjs/common';
-import { GroupService } from '../../group/group.service';
+import { GroupService } from '../app/group/group.service';
 
 @Injectable()
 export class ParseToGroup implements PipeTransform {

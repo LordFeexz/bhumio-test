@@ -5,12 +5,21 @@ import {
   UnauthorizedException,
   Res,
   Req,
+  Patch,
+  Query,
+  NotFoundException,
+  ForbiddenException,
 } from "@nestjs/common";
-import type { UserLoginPayload } from "../../interfaces/user";
+import type {
+  TokenVerifyPayload,
+  UserLoginPayload,
+} from "../../interfaces/user";
 import { UserService } from "./user.service";
 import { UserValidation } from "./user.validation";
 import encryption from "../../utils/encryption";
 import type { Response, Request } from "express";
+import { TokenVerifyPipe } from "../../pipes/parseToken";
+import { DEFAULT_USER_PASSWORD } from "../../constant/user.constant";
 
 @Controller("user")
 export class UserController {
@@ -39,5 +48,23 @@ export class UserController {
     req.session.user = this.userService.createSession(user);
 
     return res.status(200).json({ message: "success" });
+  }
+
+  @Patch("/verify")
+  public async verifyAndAddPass(
+    @Query(TokenVerifyPipe) { id }: TokenVerifyPayload,
+    @Body() payload: any
+  ) {
+    const { password } = await this.userValidation.validateVerifyUser(payload);
+
+    const user = await this.userService.findById(id);
+    if (!user) throw new NotFoundException("user not found");
+
+    if (user.password !== DEFAULT_USER_PASSWORD) throw new ForbiddenException();
+
+    user.password = encryption.hashData(password);
+    await user.save();
+
+    return { message: "success" };
   }
 }

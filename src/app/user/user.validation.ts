@@ -17,4 +17,24 @@ export class UserValidation extends BaseValidation {
       data
     );
   }
+
+  public async validateVerifyUser(data: any) {
+    return await this.validate<{ password: string; confirmPassword: string }>(
+      yup
+        .object()
+        .shape({
+          password: yup
+            .string()
+            .required("password is required")
+            .test(this.passwordValidation),
+          confirmPassword: yup.string().required("confirmPassword is required"),
+        })
+        .test(
+          "is same",
+          "password and confirmPassword doesnt match",
+          ({ password, confirmPassword }) => password === confirmPassword
+        ),
+      data
+    );
+  }
 }

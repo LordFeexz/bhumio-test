@@ -1,4 +1,4 @@
-import { userRole } from "../../constant/user.constant";
+import { DEFAULT_USER_PASSWORD, userRole } from "../../constant/user.constant";
 import type { UserRole } from "../../interfaces/user";
 import {
   Entity,
@@ -23,7 +23,7 @@ export class User extends BaseEntity {
   @Column({ nullable: false, unique: true })
   public email: string;
 
-  @Column({ default: "@Test123", select: false })
+  @Column({ default: DEFAULT_USER_PASSWORD })
   public password: string;
 
   @Column({

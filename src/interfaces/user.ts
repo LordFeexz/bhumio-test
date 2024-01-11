@@ -25,3 +25,10 @@ export interface CreateUserInput {
   email: string;
   role: "Power User" | "User";
 }
+
+export interface TokenVerifyPayload {
+  id: string;
+  role: "Power User" | "User";
+  name: string;
+  iat: number;
+}

@@ -12,7 +12,7 @@ export default abstract class BaseValidation {
       const { errors } = err as { errors: string[] };
 
       throw new BadRequestException(
-        errors.length ? errors.join(",\n ") : errors[0]
+        errors?.length > 1 ? errors.join(",\n ") : errors[0]
       );
     }
   }
@@ -42,7 +42,7 @@ export default abstract class BaseValidation {
     for (const requirement of requirements)
       if (!requirement.regex.test(password)) errors.push(requirement.message);
 
-    if (errors.length) throw new BadRequestException(errors.join(","));
+    if (errors.length) throw { errors };
 
     return true;
   }

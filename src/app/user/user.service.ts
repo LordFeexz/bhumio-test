@@ -24,4 +24,8 @@ export class UserService {
   public createSession(payload: AuthPayload) {
     return this.authService.createSessionByToken(payload);
   }
+
+  public async findById(id: string) {
+    return await this.userRepo.findOneBy({ id });
+  }
 }

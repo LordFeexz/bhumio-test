@@ -13,9 +13,9 @@ import {
 import { AdminValidation } from "./admin.validation";
 import type { CreateAdminInput } from "../../interfaces/admin";
 import { AdminService } from "./admin.service";
-import { ParseToGroup } from "./pipes/parseToGroup";
+import { ParseToGroup } from "../../pipes/parseToGroup";
 import { Group } from "../../entities/group/group.entity";
-import { ParseToAdmin } from "./pipes/parseToAdmin";
+import { ParseToAdmin } from "../../pipes/parseToAdmin";
 import { User } from "../../entities/user/user.entity";
 import { UserGroupService } from "../userGroup/userGroup.service";
 import type { Request } from "express";

@@ -1,5 +1,5 @@
 import { Injectable, type PipeTransform } from '@nestjs/common';
-import { AdminService } from '../admin.service';
+import { AdminService } from '../app/admin/admin.service';
 
 @Injectable()
 export class ParseToAdmin implements PipeTransform {
