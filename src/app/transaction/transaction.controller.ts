@@ -1,7 +1,19 @@
-import { Body, Controller, Post, Req } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Post,
+  Req,
+} from "@nestjs/common";
 import { TransactionService } from "./transaction.service";
 import { TransactionValidation } from "./transaction.validation";
 import type { Request } from "express";
+import { Transaction } from "../../entities/transaction/transaction.entity";
+import { ParseToTransaction } from "../../pipes/parseToTransaction";
 
 @Controller("transaction")
 export class TransactionController {
@@ -11,6 +23,7 @@ export class TransactionController {
   ) {}
 
   @Post()
+  @HttpCode(201)
   public async createTransaction(@Body() payload: any, @Req() req: Request) {
     const { type } = await this.transactionValidation.validateCreateTransaction(
       payload
@@ -25,5 +38,21 @@ export class TransactionController {
         userId: id,
       }),
     };
+  }
+
+  @Delete(":transactionId")
+  public async cancelTransaction(
+    @Param("transactionId", ParseToTransaction) transaction: Transaction | null,
+    @Req() req: Request
+  ) {
+    if (!transaction) throw new NotFoundException("transaction not found");
+
+    const { id } = req.userCtx;
+    if (transaction.userId !== id) throw new ForbiddenException();
+
+    transaction.status = "Cancel";
+    await transaction.save();
+
+    return { message: "success" };
   }
 }

@@ -16,7 +16,7 @@ import { TransactionValidation } from './transaction.validation';
 import { User } from '../../entities/user/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Transaction,User])],
+  imports: [TypeOrmModule.forFeature([Transaction, User])],
   providers: [
     AuthService,
     JwtService,
@@ -30,6 +30,9 @@ export class TransactionModule implements NestModule {
     const userOnly = AuthorizeRole(['User']);
     consumer
       .apply(Authentication, userOnly)
-      .forRoutes({ path: '/transaction', method: RequestMethod.POST });
+      .forRoutes(
+        { path: '/transaction', method: RequestMethod.POST },
+        { path: '/transaction/:transactionId', method: RequestMethod.DELETE },
+      );
   }
 }

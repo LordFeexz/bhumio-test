@@ -20,4 +20,8 @@ export class TransactionService {
       .create({ status: "Process", type, userId })
       .save({ ...DbOpts });
   }
+
+  public async findById(id: string) {
+    return await this.transactionRepo.findOneBy({ id });
+  }
 }
