@@ -35,27 +35,13 @@ import { EmailService } from '../../utils/email';
 })
 export class AdminModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    const superAdminOnly = AuthorizeRole(['Super Admin']);
-    const adminOnly = AuthorizeRole(['Admin']);
     consumer
-      .apply(
-        Authentication,
-        (req: Request, res: Response, next: NextFunction) => {
-          superAdminOnly(req, res, next);
-        },
-      )
+      .apply(Authentication, AuthorizeRole(['Super Admin']))
       .forRoutes(
         { path: '/admin', method: RequestMethod.POST },
         { path: '/admin/:adminId/:groupId', method: RequestMethod.PATCH },
-      );
-
-    consumer
-      .apply(
-        Authentication,
-        (req: Request, res: Response, next: NextFunction) => {
-          adminOnly(req, res, next);
-        },
       )
+      .apply(Authentication, AuthorizeRole(['Admin']))
       .forRoutes({ path: '/admin/user/:groupId', method: RequestMethod.POST });
   }
 }

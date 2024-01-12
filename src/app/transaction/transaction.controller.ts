@@ -22,14 +22,12 @@ import {
   PaginationQuery,
   type PaginationQueryProps,
 } from '../../pipes/parseQuery';
-import { UserGroupService } from '../userGroup/userGroup.service';
 
 @Controller('transaction')
 export class TransactionController {
   constructor(
     private readonly transactionService: TransactionService,
     private readonly transactionValidation: TransactionValidation,
-    private readonly userGroupService: UserGroupService,
   ) {}
 
   @Post()
@@ -80,18 +78,21 @@ export class TransactionController {
     @Req() req: Request,
     @Query(PaginationQuery) { page, limit, sort }: PaginationQueryProps,
   ) {
-    const { id } = req.userCtx;
-    const userGroup = await this.userGroupService.findOneByUserId(id);
-    if (!userGroup) throw new UnauthorizedException();
+    const { id, role } = req.userCtx;
 
-    const [data, total] = await this.transactionService.findAllPerUserGroup(
-      (await this.userGroupService.findByGroupId(userGroup.groupId)).map(
-        ({ userId }) => userId,
-      ),
-      (page - 1) * limit,
-      limit,
-      sort,
-    );
+    const [data, total] =
+      role === 'Support Desk'
+        ? await this.transactionService.findAllTransaction(
+            (page - 1) * limit,
+            limit,
+            sort,
+          )
+        : await this.transactionService.findAllGroupTransaction(
+            id,
+            (page - 1) * limit,
+            limit,
+            sort,
+          );
     if (total < 1 || !data.length)
       throw new NotFoundException('data not found');
 

@@ -15,7 +15,11 @@ export class AdminService {
   ) {}
 
   public async createDefaultAdmin(
-    { email, name }: CreateAdminInput,
+    {
+      email,
+      name,
+      role,
+    }: CreateAdminInput & { role: "Admin" | "Support Desk" },
     opts?: DbOpts
   ) {
     return await this.userRepo
@@ -23,7 +27,7 @@ export class AdminService {
         name,
         email,
         password: encryption.hashData("Default@123"),
-        role: "Admin",
+        role,
       })
       .save({ ...opts });
   }

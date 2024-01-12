@@ -24,6 +24,7 @@ import { InjectDataSource } from "@nestjs/typeorm";
 import { UserGroup } from "../../entities/userGroup/userGroup.entity";
 import { EmailService } from "../../utils/email";
 import { JwtService } from "@nestjs/jwt";
+import { AuthService } from "../auth/auth.service";
 
 @Controller("admin")
 export class AdminController {
@@ -34,21 +35,28 @@ export class AdminController {
     private readonly mailerService: EmailService,
     @InjectDataSource()
     private readonly dataSource: typeof DataSource,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly authService: AuthService
   ) {}
 
   @Post()
   @HttpCode(201)
   public async createAdmin(@Body() payload: CreateAdminInput) {
-    const { name, email } = await this.adminValidation.validateCreateAdmin(
-      payload
-    );
+    const {
+      name,
+      email,
+      role,
+    } = await this.adminValidation.validateCreateAdmin(payload);
 
     if (await this.adminService.isExists(email)) throw new ConflictException();
 
     return {
       message: "success",
-      data: await this.adminService.createDefaultAdmin({ name, email }),
+      data: await this.adminService.createDefaultAdmin({
+        name,
+        email,
+        role,
+      }),
     };
   }
 
@@ -110,7 +118,12 @@ export class AdminController {
         "Account Verification",
         `<button>
         <a href="http://localhost:3000/api/v1/user/verify?token=${this.jwtService.sign(
-          { id: user.id, role: user.role, name: user.name },
+          {
+            id: user.id,
+            role: user.role,
+            name: user.name,
+            jwtId: this.authService.createJwtId(),
+          },
           { secret: process.env.TOKEN_SECRET }
         )}" style="display: inline-block; padding: 10px 20px; color: white; background-color: blue; text-decoration: none;">Verify And Add Password</a>
         </button>`

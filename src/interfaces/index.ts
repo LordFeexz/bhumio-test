@@ -6,6 +6,7 @@ export interface jwtValue extends JwtPayload {
   role: UserRole;
   id: string;
   email: string;
+  jwtId: string;
 }
 
 export interface DbOpts {

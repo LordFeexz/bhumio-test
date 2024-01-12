@@ -14,6 +14,11 @@ export class AdminValidation extends BaseValidation {
           .required("email is required")
           .email("invalid email format"),
         name: yup.string().required("email is required"),
+        role: yup
+          .string()
+          .required("role is required")
+          .default("Admin")
+          .oneOf(["Admin", "Support Desk"], "Invalid Role"),
       }),
       data
     );

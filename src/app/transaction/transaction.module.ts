@@ -18,7 +18,7 @@ import { UserGroupService } from '../userGroup/userGroup.service';
 import { UserGroup } from '../../entities/userGroup/userGroup.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Transaction, User,UserGroup])],
+  imports: [TypeOrmModule.forFeature([Transaction, User, UserGroup])],
   providers: [
     AuthService,
     JwtService,
@@ -30,13 +30,12 @@ import { UserGroup } from '../../entities/userGroup/userGroup.entity';
 })
 export class TransactionModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    const role = AuthorizeRole(['Admin', 'Power User', 'Support Desk', 'User'])
     consumer
       .apply(Authentication)
       .forRoutes(
         { path: '/transaction', method: RequestMethod.ALL },
-        { path: '/transaction/*', method: RequestMethod.ALL }
-        )
+        { path: '/transaction/*', method: RequestMethod.ALL },
+      )
       .apply(AuthorizeRole(['User']))
       .forRoutes(
         { path: '/transaction', method: RequestMethod.POST },
@@ -50,7 +49,7 @@ export class TransactionModule implements NestModule {
       })
       .apply(AuthorizeRole(['Power User', 'Support Desk', 'Admin']))
       .forRoutes({ path: '/transaction/all', method: RequestMethod.GET })
-      .apply(role)
+      .apply(AuthorizeRole(['Admin', 'Power User', 'Support Desk', 'User']))
       .forRoutes({
         path: '/transaction/:transactionId',
         method: RequestMethod.GET,
