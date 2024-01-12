@@ -14,38 +14,46 @@ import { AuthorizeRole } from '../../middlewares/authorizeRole';
 import { Authentication } from '../../middlewares/authentication.middleware';
 import { TransactionValidation } from './transaction.validation';
 import { User } from '../../entities/user/user.entity';
+import { UserGroupService } from '../userGroup/userGroup.service';
+import { UserGroup } from '../../entities/userGroup/userGroup.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Transaction, User])],
+  imports: [TypeOrmModule.forFeature([Transaction, User,UserGroup])],
   providers: [
     AuthService,
     JwtService,
     TransactionService,
     TransactionValidation,
+    UserGroupService,
   ],
   controllers: [TransactionController],
 })
 export class TransactionModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    const userOnly = AuthorizeRole(['User']);
-    const adminOnly = AuthorizeRole(['Admin']);
-    const powerUserAndSupportOnly = AuthorizeRole(['Power User','Support Desk']);
-
+    const role = AuthorizeRole(['Admin', 'Power User', 'Support Desk', 'User'])
     consumer
       .apply(Authentication)
-      .forRoutes({ path: '/transaction', method: RequestMethod.ALL })
-      .apply(userOnly)
+      .forRoutes(
+        { path: '/transaction', method: RequestMethod.ALL },
+        { path: '/transaction/*', method: RequestMethod.ALL }
+        )
+      .apply(AuthorizeRole(['User']))
       .forRoutes(
         { path: '/transaction', method: RequestMethod.POST },
         { path: '/transaction', method: RequestMethod.GET },
         { path: '/transaction/:transactionId', method: RequestMethod.DELETE },
       )
-      .apply(adminOnly)
+      .apply(AuthorizeRole(['Admin']))
       .forRoutes({
         path: '/transaction/:transactionId',
         method: RequestMethod.PATCH,
       })
-      .apply(powerUserAndSupportOnly)
-      .forRoutes({ path: '/transaction/all', method: RequestMethod.GET });
+      .apply(AuthorizeRole(['Power User', 'Support Desk', 'Admin']))
+      .forRoutes({ path: '/transaction/all', method: RequestMethod.GET })
+      .apply(role)
+      .forRoutes({
+        path: '/transaction/:transactionId',
+        method: RequestMethod.GET,
+      });
   }
 }

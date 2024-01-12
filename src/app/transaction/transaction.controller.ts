@@ -11,6 +11,7 @@ import {
   Post,
   Query,
   Req,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { TransactionValidation } from './transaction.validation';
@@ -21,12 +22,14 @@ import {
   PaginationQuery,
   type PaginationQueryProps,
 } from '../../pipes/parseQuery';
+import { UserGroupService } from '../userGroup/userGroup.service';
 
 @Controller('transaction')
 export class TransactionController {
   constructor(
     private readonly transactionService: TransactionService,
     private readonly transactionValidation: TransactionValidation,
+    private readonly userGroupService: UserGroupService,
   ) {}
 
   @Post()
@@ -59,7 +62,8 @@ export class TransactionController {
       limit,
       sort,
     );
-    if (total < 1) throw new NotFoundException('data not found');
+    if (total < 1 || !data.length)
+      throw new NotFoundException('data not found');
 
     return {
       message: 'OK',
@@ -73,14 +77,23 @@ export class TransactionController {
 
   @Get('/all')
   public async findAll(
+    @Req() req: Request,
     @Query(PaginationQuery) { page, limit, sort }: PaginationQueryProps,
   ) {
-    const [data, total] = await this.transactionService.findAll(
+    const { id } = req.userCtx;
+    const userGroup = await this.userGroupService.findOneByUserId(id);
+    if (!userGroup) throw new UnauthorizedException();
+
+    const [data, total] = await this.transactionService.findAllPerUserGroup(
+      (await this.userGroupService.findByGroupId(userGroup.groupId)).map(
+        ({ userId }) => userId,
+      ),
       (page - 1) * limit,
       limit,
       sort,
     );
-    if (total < 1) throw new NotFoundException('data not found');
+    if (total < 1 || !data.length)
+      throw new NotFoundException('data not found');
 
     return {
       message: 'OK',
@@ -90,6 +103,20 @@ export class TransactionController {
       page,
       limit,
     };
+  }
+
+  @Get(':transactionId')
+  public async getById(
+    @Param('transactionId', ParseToTransaction) transaction: Transaction | null,
+    @Req() req: Request,
+  ) {
+    if (!transaction) throw new NotFoundException('transaction not found');
+
+    const { role, id } = req.userCtx;
+    if (role === 'User' && id !== transaction.userId)
+      throw new ForbiddenException();
+
+    return { message: 'OK', data: transaction };
   }
 
   @Delete(':transactionId')

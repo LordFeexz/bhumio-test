@@ -5,6 +5,7 @@ import { TransactionRepository } from "../../entities/transaction/transaction.re
 import type { TransactionType } from "../../interfaces/transaction";
 import type { DbOpts } from "../../interfaces";
 import type { SortOpts } from "../../pipes/parseQuery";
+import { In } from "typeorm";
 
 @Injectable()
 export class TransactionService {
@@ -42,8 +43,16 @@ export class TransactionService {
     });
   }
 
-  public async findAll(skip = 0, limit = 10, sort: SortOpts = "DESC") {
+  public async findAllPerUserGroup(
+    userIds: string[],
+    skip = 0,
+    limit = 10,
+    sort: SortOpts = "DESC"
+  ) {
     return await this.transactionRepo.findAndCount({
+      where: {
+        userId: In(userIds),
+      },
       skip,
       take: limit,
       order: { createdAt: sort },

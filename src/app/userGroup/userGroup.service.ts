@@ -25,7 +25,11 @@ export class UserGroupService {
     return await this.userGroupRepo.findAndCount({ ...opts, where: query });
   }
 
-  public async findByUserIds(userIds: string[], opts?: DbOpts) {
-    return await this.userGroupRepo.findBy({ ...opts, userId: In(userIds) });
+  public async findByUserIds(userIds: string[]) {
+    return await this.userGroupRepo.findBy({ userId: In(userIds) });
+  }
+
+  public async findByGroupId(groupId: string) {
+    return await this.userGroupRepo.findBy({ groupId });
   }
 }
