@@ -11,7 +11,7 @@ export default new DataSource({
   port: 5432,
   username: "postgres",
   password: "qwertyui",
-  database: "bhumio",
+  database: process.env.NODE_ENV === "test" ? "bhumio-test" : "bhumio", //save to env
   synchronize: process.env.NODE_ENV !== "production",
   logging: true,
   entities: [User, Group, UserGroup, Transaction],

@@ -9,7 +9,7 @@ const config: TypeOrmModuleOptions = {
   port: 5432,
   username: 'postgres',
   password: 'qwertyui',
-  database: 'bhumio',
+  database: process.env.NODE_ENV === 'test' ? 'bhumio-test' : 'bhumio',
   synchronize: process.env.NODE_ENV !== 'production',
   logging: process.env.NODE_ENV !== 'test',
   entities: [User, Group, UserGroup, Transaction],

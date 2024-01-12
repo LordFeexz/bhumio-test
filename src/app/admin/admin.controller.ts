@@ -24,7 +24,6 @@ import { InjectDataSource } from "@nestjs/typeorm";
 import { UserGroup } from "../../entities/userGroup/userGroup.entity";
 import { EmailService } from "../../utils/email";
 import { JwtService } from "@nestjs/jwt";
-import { AuthService } from "../auth/auth.service";
 
 @Controller("admin")
 export class AdminController {
@@ -35,8 +34,7 @@ export class AdminController {
     private readonly mailerService: EmailService,
     @InjectDataSource()
     private readonly dataSource: typeof DataSource,
-    private readonly jwtService: JwtService,
-    private readonly authService: AuthService
+    private readonly jwtService: JwtService
   ) {}
 
   @Post()
@@ -122,7 +120,6 @@ export class AdminController {
             id: user.id,
             role: user.role,
             name: user.name,
-            jwtId: this.authService.createJwtId(),
           },
           { secret: process.env.TOKEN_SECRET }
         )}" style="display: inline-block; padding: 10px 20px; color: white; background-color: blue; text-decoration: none;">Verify And Add Password</a>

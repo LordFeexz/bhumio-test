@@ -27,15 +27,19 @@ describe('Auth Module', () => {
     await app.init();
   });
 
+  afterAll(async () => {
+    await app.close();
+  });
+
   //service
   describe('Service', () => {
     beforeEach(() => {
-        sandbox = createSandbox()
-      })
-    
-      afterEach(() => {
-        sandbox.restore()
-      })
+      sandbox = createSandbox();
+    });
+
+    afterEach(() => {
+      sandbox.restore();
+    });
 
     const payload: AuthPayload = {
       email: 'tes@gmail.com',
@@ -70,7 +74,7 @@ describe('Auth Module', () => {
     it('validateSessionToken should return value', () => {
       const token = authService.createSessionByToken(payload);
 
-      const value = authService.validateSessionToken(token)
+      const value = authService.validateSessionToken(token);
       expect(value).toBeInstanceOf(Object);
     });
   });
