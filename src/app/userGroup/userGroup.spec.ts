@@ -25,6 +25,10 @@ describe('UserGroup Module', () => {
     await app.init();
   });
 
+  afterAll(async() => {
+    await app.close()
+  })
+
   describe('Service', () => {
     beforeAll(async () => {
       user = await User.create({
