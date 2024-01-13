@@ -17,7 +17,7 @@ export class UserGroup extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   public id: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   public userId: string;
 
   @Column({ nullable: false })

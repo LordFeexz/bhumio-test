@@ -1,5 +1,5 @@
 import { Test, type TestingModule } from '@nestjs/testing';
-import { UnauthorizedException, type INestApplication } from '@nestjs/common';
+import { type INestApplication } from '@nestjs/common';
 import { AppModule } from '../../app.module';
 import { TransactionService } from './transaction.service';
 import { User } from '../../entities/user/user.entity';
@@ -8,7 +8,6 @@ import { Transaction } from '../../entities/transaction/transaction.entity';
 import { randomUUID } from 'crypto';
 import { type SinonSandbox, createSandbox, assert } from 'sinon';
 import { UserGroupService } from '../userGroup/userGroup.service';
-import { UserGroup } from '../../entities/userGroup/userGroup.entity';
 
 describe('Transaction Module', () => {
   let app: INestApplication;
